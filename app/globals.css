@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: #f6f6f8;
+  color: #191922;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 表格数字使用等宽字体，保证数据列对齐 */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* 输入框聚焦态统一样式 */
+.focus-ring:focus-visible {
+  outline: 2px solid #6d5ae0;
+  outline-offset: 1px;
+}
+
+/* 隐藏横向滚动条但保留滚动能力 */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background: #ddd6f5;
+}
+
+/* 轻量骨架屏 */
+.skeleton {
+  background: linear-gradient(90deg, #eeeeF2 25%, #f7f7fa 37%, #eeeeF2 63%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+textarea {
+  resize: vertical;
+}
