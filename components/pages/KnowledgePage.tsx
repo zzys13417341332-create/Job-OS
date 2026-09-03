@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { BookOpenText, BookPlus, Link2, Pencil, Search, Trash2 } from "lucide-react";
+import { BookOpenText, BookPlus, Link2, Pencil, Search, Trash2, Upload } from "lucide-react";
 import type { Knowledge, KnowledgeCategory } from "@/lib/types";
 import { KNOWLEDGE_CATEGORIES } from "@/lib/types";
 import {
@@ -22,6 +22,7 @@ import {
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ConfirmDialog } from "@/components/ui/Modal";
 import { KnowledgeFormModal } from "@/components/knowledge/KnowledgeFormModal";
+import { BulkImportModal } from "@/components/import/BulkImportModal";
 import { cn } from "@/lib/utils";
 import { KB_FOLDERS, folderOfCategory } from "@/components/knowledge/kbFolders";
 
@@ -41,6 +42,7 @@ export function KnowledgePage() {
   const [editing, setEditing] = useState<Knowledge | null>(null);
   const [formOpen, setFormOpen] = useState(false);
   const [deleting, setDeleting] = useState<Knowledge | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -77,9 +79,14 @@ export function KnowledgePage() {
         title="Knowledge Base · 知识库"
         description="把分散在网页、飞书、Notion 里的行业/公司/岗位/案例知识沉淀成结构化卡片，反哺 JD 匹配与面试准备。"
         actions={
-          <Button variant="accent" icon={<BookPlus size={15} />} onClick={() => setFormOpen(true)}>
-            新建知识卡片
-          </Button>
+          <>
+            <Button variant="outline" icon={<Upload size={15} />} onClick={() => setImportOpen(true)}>
+              批量导入
+            </Button>
+            <Button variant="accent" icon={<BookPlus size={15} />} onClick={() => setFormOpen(true)}>
+              新建知识卡片
+            </Button>
+          </>
         }
       />
 
@@ -183,6 +190,11 @@ export function KnowledgePage() {
           setEditing(null);
         }}
         item={editing}
+      />
+      <BulkImportModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        target="knowledge"
       />
       <ConfirmDialog
         open={Boolean(deleting)}

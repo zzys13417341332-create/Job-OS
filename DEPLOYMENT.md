@@ -23,7 +23,15 @@ https://github.com/zzys13417341332-create/Job-OS.git
    - `AI_API_KEY`：真实 AI Key（仅服务端使用）
    - `AI_MODEL`：如 `gpt-4.1-mini`
    - `NEXT_PUBLIC_AI_MODE`：`mock` 或 `server`
+   - `FEISHU_APP_ID` / `FEISHU_APP_SECRET`：飞书开放平台应用凭证（仅“飞书链接批量导入”需要）
 4. Deploy。得到 `https://<project>.vercel.app`。
+
+## 批量导入功能
+
+- 知识库 / 项目库页面均提供「批量导入」：支持粘贴文本、上传 `.md / .txt / .docx`、粘贴飞书文档链接。
+- 解析规则：按 Markdown 标题（`#`）或编号小节（`一、` / `1、`）自动分段；无标题结构时整篇作为一条。
+- 导入前会展示预览，可修改标题、分类、重要度并勾选需要写入的条目；导入后仍可正常编辑。
+- 飞书链接需要配置 `FEISHU_APP_ID` / `FEISHU_APP_SECRET`，且文档需分享给该飞书应用；未配置时可先把飞书文档导出为 `.md` 或 `.docx` 再上传。
 
 ## 第 3 步：创建 Supabase 项目
 

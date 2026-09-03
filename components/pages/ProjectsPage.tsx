@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { FolderKanban, FolderPlus, Pencil, Plus, Sparkles, Trash2 } from "lucide-react";
+import { FolderKanban, FolderPlus, Pencil, Plus, Sparkles, Trash2, Upload } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { PROJECT_TYPE_LABELS } from "@/lib/constants";
 import { useData } from "@/providers/data-context";
@@ -14,6 +14,7 @@ import { ConfirmDialog } from "@/components/ui/Modal";
 import { ProgressBar } from "@/components/ui/Progress";
 import { ProjectFormModal } from "@/components/projects/ProjectFormModal";
 import { FollowUpModal } from "@/components/projects/FollowUpModal";
+import { BulkImportModal } from "@/components/import/BulkImportModal";
 
 const REQUIRED_FIELDS: Array<{ key: keyof Project; label: string }> = [
   { key: "background", label: "背景" },
@@ -39,6 +40,7 @@ export function ProjectsPage({ embedded = false }: { embedded?: boolean } = {}) 
   const [formOpen, setFormOpen] = useState(false);
   const [followProject, setFollowProject] = useState<Project | null>(null);
   const [deleting, setDeleting] = useState<Project | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -66,9 +68,14 @@ export function ProjectsPage({ embedded = false }: { embedded?: boolean } = {}) 
           title="Project Library · 项目库"
           description="每个项目按 B-G-A-R 结构化保存，并支撑 JD 匹配、面试追问与复盘缺口检测。"
           actions={
-            <Button variant="accent" icon={<FolderPlus size={15} />} onClick={openNew}>
-              新增项目
-            </Button>
+            <>
+              <Button variant="outline" icon={<Upload size={15} />} onClick={() => setImportOpen(true)}>
+                批量导入
+              </Button>
+              <Button variant="accent" icon={<FolderPlus size={15} />} onClick={openNew}>
+                新增项目
+              </Button>
+            </>
           }
         />
       ) : (
@@ -76,9 +83,14 @@ export function ProjectsPage({ embedded = false }: { embedded?: boolean } = {}) 
           <p className="text-[13px] text-muted">
             项目是面试的弹药库：BGAR 越完整，AI 追问与 JD 匹配越有依据。
           </p>
-          <Button size="sm" variant="accent" icon={<FolderPlus size={14} />} onClick={openNew}>
-            新增项目
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" icon={<Upload size={13} />} onClick={() => setImportOpen(true)}>
+              批量导入
+            </Button>
+            <Button size="sm" variant="accent" icon={<FolderPlus size={14} />} onClick={openNew}>
+              新增项目
+            </Button>
+          </div>
         </div>
       )}
 
@@ -166,6 +178,11 @@ export function ProjectsPage({ embedded = false }: { embedded?: boolean } = {}) 
 
       <ProjectFormModal open={formOpen} onClose={() => setFormOpen(false)} project={editing} />
       {followProject ? <FollowUpModal project={followProject} onClose={() => setFollowProject(null)} /> : null}
+      <BulkImportModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        target="project"
+      />
       <ConfirmDialog
         open={Boolean(deleting)}
         onClose={() => setDeleting(null)}
